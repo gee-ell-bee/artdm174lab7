@@ -36,7 +36,7 @@ fetch("https://api.tomtom.com/search/2/poiSearch/dog+park.json?key=w0Ntsu0zxW281
                     }).addTo(map)
                     .bindPopup("<h1>" + park.poi.name + "</h1>" +
                                 "<p>" + park.address.streetName + "<br>" +
-                                park.address.municipality + ", " + park.address.countrySubdivision + park.address.postalCode + "</p>");
+                                park.address.municipality + ", " + park.address.countrySubdivision + " " + park.address.postalCode + "</p>");
                     
                 };
             };
