@@ -29,11 +29,15 @@ fetch("https://api.tomtom.com/search/2/poiSearch/dog+park.json?key=w0Ntsu0zxW281
                 && park.position.lon > -123.039705) {
                 if(park.position.lat > 37.138776
                     && park.position.lat < 38) {
+                    Location(park.id, park.position.lat, park.position.lon, park.poi.name, park.address.freeformAddress);
                     var dogPark = L.circle([park.position.lat, park.position.lon], {
                         color: 'rgba(230, 60, 60, .6)',
                         radius: 0
-                    }).addTo(map);
-                    Location(park.id, park.position.lat, park.position.lon, park.poi.name, park.address.freeformAddress);
+                    }).addTo(map)
+                    .bindPopup("<h1>" + park.poi.name + "</h1>" +
+                                "<p>" + park.address.streetName + "<br>" +
+                                park.address.municipality + ", " + park.address.countrySubdivision + park.address.postalCode + "</p>");
+                    
                 };
             };
             
