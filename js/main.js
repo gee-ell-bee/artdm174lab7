@@ -19,7 +19,7 @@ L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/
 
 
 //fetch("dogpark.json")
-fetch("dogpark.json")
+fetch("https://api.tomtom.com/search/2/poiSearch/dog+park.json?key=w0Ntsu0zxW281gaO8nyj33OXcfgQDqbA&limit=100&ofs=0&countryset=US&lat=37.863515&lon=-121.973367&radius=&topLeft=38.066068,-122.457460&btmRight=37.353515,-121.211545&language=en-US&categoryset=9362&relatedpois=all")
     .then((response) => response.json())
     .then((pageData) => {
         console.log(pageData.results);
@@ -34,7 +34,7 @@ fetch("dogpark.json")
                         color: 'rgba(230, 60, 60, .6)',
                         radius: 0
                     }).addTo(map);
-                    //Location(park.id, park.position.lat, park.position.lon, park.poi.name, park.address.freeformAddress);
+                    Location(park.id, park.position.lat, park.position.lon, park.poi.name, park.address.freeformAddress);
                 };
             };
             
