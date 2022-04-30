@@ -31,23 +31,23 @@ fetch("https://api.tomtom.com/search/2/poiSearch/dog+park.json?key=w0Ntsu0zxW281
                 if(park.position.lat > 37.138776
                 && park.position.lat < 38) {
                     // create an object with the following attributes
-                    // (for later reference)
                     var parkContent = new Location(park.id, park.position.lat, park.position.lon, park.poi.name, park.address.freeformAddress);
-                    console.log(parkContent);
+                    // create HTML elements
                     let newLI = new DocumentFragment;
                     let newListItem = document.createElement('LI');
                     newListItem.id = parkContent.id;
                     newListItem.innerHTML = `<h1>${parkContent.name}</h1>
                     <p class="address">${parkContent.address}</p>
                     <a class="mapIt" target="_blank" url="http://www.google.com/maps/search/${parkContent.nameUrl}/@${parkContent.lat},${parkContent.lon}">Get Directions</a>`;
+                    // append HTML elements
                     newLI.appendChild(newListItem);
                     list.appendChild(newLI);
+
                     // create plot point for park
                     var dogPark = L.circle([park.position.lat, park.position.lon], {
                         color: 'rgba(230, 60, 60, .6)',
                         radius: 0
                     }).addTo(map);
-                    Location(park.id, park.position.lat, park.position.lon, park.poi.name, park.address.freeformAddress);
                 };
             };
         });
