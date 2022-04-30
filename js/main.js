@@ -24,7 +24,7 @@ fetch("https://api.tomtom.com/search/2/poiSearch/dog+park.json?key=w0Ntsu0zxW281
     .then((pageData) => {
         let data = pageData.results;
         data.forEach((park) => {
-            //if the park is in the Bay Area, put it on the map
+            //if the park is in the (general) (East?) Bay Area, put it on the map
             // find park's latitude & longitude
             if(park.position.lon < -119
             && park.position.lon > -123.039705) {
