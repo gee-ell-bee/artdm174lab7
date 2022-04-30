@@ -47,7 +47,12 @@ fetch("https://api.tomtom.com/search/2/poiSearch/dog+park.json?key=w0Ntsu0zxW281
                     var dogPark = L.circle([park.position.lat, park.position.lon], {
                         color: 'rgba(230, 60, 60, .6)',
                         radius: 0
-                    }).addTo(map);
+                    }).addTo(map)
+                    // create pop-up with basic info
+                    .bindPopup("<h1>" + park.poi.name + "</h1>" +
+                        "<p>" + park.address.streetName + "<br>" +
+                        park.address.municipality + ", " + park.address.countrySubdivision + " " + park.address.postalCode + "</p>"
+                    );
                 };
             };
         });
