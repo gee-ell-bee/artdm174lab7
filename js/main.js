@@ -25,7 +25,6 @@ fetch("https://api.tomtom.com/search/2/poiSearch/dog+park.json?key=w0Ntsu0zxW281
         console.log(pageData.results);
         let data = pageData.results;
         data.forEach((park) => {
-            //topLeft=38.066068,-122.457460&btmRight=37.353515,-121.211545
             if(park.position.lon < -119
                 && park.position.lon > -123.039705) {
                 if(park.position.lat > 37.138776
