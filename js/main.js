@@ -22,7 +22,6 @@ L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/
 fetch("https://api.tomtom.com/search/2/poiSearch/dog+park.json?key=w0Ntsu0zxW281gaO8nyj33OXcfgQDqbA&limit=100&ofs=0&countryset=US&lat=37.863515&lon=-121.973367&radius=&topLeft=38.066068,-122.457460&btmRight=37.353515,-121.211545&language=en-US&categoryset=9362&relatedpois=all")
     .then((response) => response.json())
     .then((pageData) => {
-        console.log(pageData.results);
         let data = pageData.results;
         data.forEach((park) => {
             //if the park is in the Bay Area, put it on the map
