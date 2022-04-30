@@ -29,9 +29,6 @@ fetch("https://api.tomtom.com/search/2/poiSearch/dog+park.json?key=w0Ntsu0zxW281
             if(park.position.lon < -119
                 && park.position.lon > -123.039705) {
                 if(park.position.lat > 37.138776
-<<<<<<< HEAD
-                    && park.position.lat < 38) {
-=======
                 && park.position.lat < 38) {
                     // create an object with the following attributes
                     // (for later reference)
@@ -46,7 +43,6 @@ fetch("https://api.tomtom.com/search/2/poiSearch/dog+park.json?key=w0Ntsu0zxW281
                     newLI.appendChild(newListItem);
                     list.appendChild(newLI);
                     // create plot point for park
->>>>>>> 1dfd9e6 (html list of parks & accompanying placement css)
                     var dogPark = L.circle([park.position.lat, park.position.lon], {
                         color: 'rgba(230, 60, 60, .6)',
                         radius: 0

@@ -60,8 +60,6 @@ main {
     height: 100%;
 }
 
-<<<<<<< HEAD
-=======
 .words h1 {
     text-align: center;
 }
@@ -71,7 +69,6 @@ main {
     max-height: 33vh;
 }
 
->>>>>>> 1dfd9e6 (html list of parks & accompanying placement css)
 #map {
     height: 300px;
 }
