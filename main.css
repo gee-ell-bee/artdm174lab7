@@ -61,6 +61,14 @@ main {
     height: 100%;
 }
 
+.words h1 {
+    text-align: center;
+}
+
+.words .parkList {
+    overflow-y: scroll;
+}
+
 #map {
     height: 300px;
 }

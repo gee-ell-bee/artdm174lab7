@@ -25,19 +25,25 @@ fetch("https://api.tomtom.com/search/2/poiSearch/dog+park.json?key=w0Ntsu0zxW281
         console.log(pageData.results);
         let data = pageData.results;
         data.forEach((park) => {
+            //if the park is in the Bay Area, put it on the map
+            // find park's latitude & longitude
             if(park.position.lon < -119
-                && park.position.lon > -123.039705) {
+            && park.position.lon > -123.039705) {
                 if(park.position.lat > 37.138776
-                    && park.position.lat < 38) {
+                && park.position.lat < 38) {
+                    // create an object with the following attributes
+                    // (for later reference)
                     Location(park.id, park.position.lat, park.position.lon, park.poi.name, park.address.freeformAddress);
+                    // create plot point for park
                     var dogPark = L.circle([park.position.lat, park.position.lon], {
                         color: 'rgba(230, 60, 60, .6)',
                         radius: 0
                     }).addTo(map)
+                    // create pop-up with basic info
                     .bindPopup("<h1>" + park.poi.name + "</h1>" +
-                                "<p>" + park.address.streetName + "<br>" +
-                                park.address.municipality + ", " + park.address.countrySubdivision + " " + park.address.postalCode + "</p>");
-                    
+                        "<p>" + park.address.streetName + "<br>" +
+                        park.address.municipality + ", " + park.address.countrySubdivision + " " + park.address.postalCode + "</p>"
+                    );
                 };
             };
             
