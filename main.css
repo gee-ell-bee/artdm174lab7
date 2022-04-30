@@ -51,7 +51,7 @@ main {
     height: 100%;
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 1fr 1fr;
+    grid-template-rows: 1fr 2fr;
     grid-gap: 3rem;
     
 }
@@ -63,4 +63,8 @@ main {
 
 #map {
     height: 300px;
+}
+
+.leaflet-bottom {
+    opacity: .5;
 }
