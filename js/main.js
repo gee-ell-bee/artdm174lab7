@@ -107,13 +107,6 @@ function Location(id, lat, lon, name, address) {
     this.name = name;
     this.address = address;
     this.favorite = false;
-    this.favoritePark = function() {
-        if(this.favorite = false) {
-            this.favorite = true;
-        } else if(this.favorite = true) {
-            this.favorite = false;
-        };
-    };
     this.nameUrl = name.replaceAll(" ", "+");
 };
 
