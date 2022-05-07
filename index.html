@@ -21,6 +21,18 @@
     <main>
         <section id="container" class="words">
             <h1>Dog Parks Near You</h1>
+            <section class="search">
+                <form>
+                    <label for="search">
+                        Search by City
+                        <input id="search"
+                            type="search"
+                            name="searchbar"
+                            placeholder="Alamo"></label>
+                    <button formmethod="get"
+                        formtarget="_top">Search</button>
+                </form>
+            </section>
             <section class="parkList">
                 <ol id="parkList"></ol>
             </section>
