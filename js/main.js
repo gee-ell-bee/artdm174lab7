@@ -1,12 +1,16 @@
 import { Keychain } from "./keys.js"; // import API keys
 
-/*let headers = new Headers();
-headers.append("X-CSCAPI-KEY", "API_KEY");
-let requestOptions = {
+var roadOptions = {
     method: "GET",
-    headers: headers,
-    redirect: "follow"
-};*/
+    hostname: "api.roadgoat.com",
+    path: "/api/v2/destinations/new-york-ny-usa",
+    headers: {
+      "Authorization": `Basic ${Keychain.road.basicAuth}`
+    },
+    maxRedirects: 20
+};
+
+var roadHeader = new Headers(roadOptions);
 
 let list = document.getElementById("parkList");
 let place = {
@@ -44,7 +48,17 @@ document.addEventListener("DOMContentLoaded", init);
 function init() {
     // show parsed parks data points
     filterParks();
+    getRoadInfo();
 }
+
+async function getRoadInfo() {
+    try {
+        const response = await fetch("https://api.roadgoat.com/api/v2/destinations/new-york-ny-usa", { headers: roadHeader});
+        console.log(response);
+    } catch(err) {
+        console.log("Road Fetch Error:", err)
+    };
+};
 
 async function getParks() {
     try {
