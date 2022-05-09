@@ -1,17 +1,20 @@
 import { Keychain } from "./keys.js"; // import API keys
+import { caCities } from "./ca-cities-json.js"; // import cities data
 
-var roadOptions = {
-    method: "GET",
-    hostname: "api.roadgoat.com",
-    path: "/api/v2/destinations/new-york-ny-usa",
-    headers: {
-      "Authorization": `Basic ${Keychain.road.basicAuth}`
+// FOR ROAD GOAT
+/*var roadOptions = {
+    'method': 'GET',
+    'hostname': 'api.roadgoat.com',
+    'path': '/api/v2/destinations/new-york-ny-usa',
+    'headers': {
+      'Authorization': `Basic NDBlOGJlZDIxY2RjNGJiOWJmNWE2YzNmNmNmNzhjMjE6YTRlZjljNjdhYTU5N2UzZDE2ZjQ2NTljMDJjOTZjNDE=`
     },
-    maxRedirects: 20
+    'maxRedirects': 20
 };
 
-var roadHeader = new Headers(roadOptions);
-
+var roadHeader = new Headers(roadOptions);*/
+const searchButton = document.getElementById("button");
+const searchField = document.getElementById("search");
 let list = document.getElementById("parkList");
 let place = {
     name: "New York",
@@ -46,18 +49,33 @@ L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/
 document.addEventListener("DOMContentLoaded", init);
 
 function init() {
+    console.log(searchField, searchButton);
     // show parsed parks data points
     filterParks();
-    getRoadInfo();
-}
+    //searchField.addEventListener("input", searchInput);
+    searchButton.addEventListener("click", search, true);
+};
 
-async function getRoadInfo() {
+// FOR ROAD GOAT
+/*async function getRoadInfo() {
     try {
         const response = await fetch("https://api.roadgoat.com/api/v2/destinations/new-york-ny-usa", { headers: roadHeader});
         console.log(response);
     } catch(err) {
         console.log("Road Fetch Error:", err)
     };
+};*/
+
+function searchInput(e) {
+    let value = e.target.value;
+    console.log(value);
+};
+
+function search(e) {
+    let target = e.target;
+    target.preventDefault;
+    let value = searchField.value;
+    console.log(value);
 };
 
 async function getParks() {
