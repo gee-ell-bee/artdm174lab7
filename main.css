@@ -51,7 +51,7 @@ main {
     height: 100%;
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 1fr 2fr;
+    grid-template-rows: 1fr, 2fr;
     grid-gap: 3rem;
 }
 
@@ -66,11 +66,11 @@ main {
 
 .words .parkList {
     overflow-y: scroll;
-    max-height: 33vh;
+    max-height: 20vh;
 }
 
 #map {
-    height: 300px;
+    height: 60vh;
 }
 
 .leaflet-bottom {

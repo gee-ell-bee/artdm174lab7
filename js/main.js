@@ -1,25 +1,18 @@
 import { Keychain } from "./keys.js"; // import API keys
 import { caCities } from "./ca-cities-json.js"; // import cities data
 
-// FOR ROAD GOAT
-/*var roadOptions = {
-    'method': 'GET',
-    'hostname': 'api.roadgoat.com',
-    'path': '/api/v2/destinations/new-york-ny-usa',
-    'headers': {
-      'Authorization': `Basic NDBlOGJlZDIxY2RjNGJiOWJmNWE2YzNmNmNmNzhjMjE6YTRlZjljNjdhYTU5N2UzZDE2ZjQ2NTljMDJjOTZjNDE=`
-    },
-    'maxRedirects': 20
-};
-
-var roadHeader = new Headers(roadOptions);*/
 const searchButton = document.getElementById("button");
 const searchField = document.getElementById("search");
+let cityElem = document.getElementById("cityName");
+var cityName = "Alamo";
+var cityLat = 37.85020000;
+var cityLon = -122.03218000;
+
 let list = document.getElementById("parkList");
 let place = {
-    name: "New York",
-    lat: 40.7142700,
-    lon: -74.0059700,
+    name: cityName,
+    lat: cityLat,
+    lon: cityLon,
 
     top: function(lat) {
         return lat + 0.202553;
@@ -35,12 +28,15 @@ let place = {
     }
 };
 
+updateHTML();
+
 // check data matches for Alamo
 //console.log("topLeft=38.066068,-122.457460&btmRight=37.353515,-121.211545");
 //console.log("topLeft=", place.top(place.lat), ",", place.left(place.lon), "&btmRight=", place.btm(place.lat), ",", place.right(place.lon));
 
-const map = L.map("map").setView([place.lat, place.lon], 10);
-L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png", {
+// init map
+ let map = L.map("map").setView([place.lat, place.lon], 10);
+ L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png", {
     attribution: "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors &copy; <a href='https://carto.com/attributions'>CARTO</a>",
     subdomains: "abcd",
     maxZoom: 20})
@@ -50,21 +46,29 @@ document.addEventListener("DOMContentLoaded", init);
 
 function init() {
     console.log(searchField, searchButton);
-    // show parsed parks data points
-    filterParks();
-    //searchField.addEventListener("input", searchInput);
-    searchButton.addEventListener("click", search, true);
-};
 
-// FOR ROAD GOAT
-/*async function getRoadInfo() {
-    try {
-        const response = await fetch("https://api.roadgoat.com/api/v2/destinations/new-york-ny-usa", { headers: roadHeader});
-        console.log(response);
-    } catch(err) {
-        console.log("Road Fetch Error:", err)
-    };
-};*/
+    updateTitle;
+
+    // init You Are Here Marker
+    let youreHereMarker = L.circleMarker([place.lat, place.lon], {
+        opacity: .7,
+        radius: 7,
+        fillOpacity: .3
+    })
+        .addTo(map)
+        .bindPopup(`<h2>${place.name}</h2>`)
+    ;
+    
+    // show parsed parks data points
+     filterParks();
+
+    //searchbar events
+        // searchbar filtering while typing function:
+         //searchField.addEventListener("input", searchInput);
+
+        // find city
+         searchButton.addEventListener("click", search);
+};
 
 function searchInput(e) {
     let value = e.target.value;
@@ -72,10 +76,45 @@ function searchInput(e) {
 };
 
 function search(e) {
-    let target = e.target;
-    target.preventDefault;
+    e.preventDefault();
     let value = searchField.value;
     console.log(value);
+};
+
+function updatePlaceholder() {
+    // change placeholder text to currently search city
+     searchField.placeholder = cityName;
+    //check placeholder
+     console.log(searchField.placeholder);
+}
+
+function updateTitle() {
+    // update title span contents
+    cityElem.innerHTML = `${place.name}`;
+    console.log(cityElem.parentElement);
+}
+
+function updateHTML() {
+    updatePlaceholder();
+    updateTitle();
+}
+
+function refreshMap() {
+    updateHTML();
+
+    // match new city to title
+     updateTitle;
+    // update map
+    map = L.map("map").setView([place.lat, place.lon], 10);
+    // update You Are Here Marker
+    youreHereMarker = L.circleMarker([place.lat, place.lon], {
+        opacity: .7,
+        radius: 5,
+        fillOpacity: .3
+    })
+        .addTo(map)
+        .bindPopup(`<h2>${place.name}</h2>`)
+    ;
 };
 
 async function getParks() {
@@ -85,7 +124,7 @@ async function getParks() {
         const data = baseData.results;
         return data;
     } catch(err) {
-        console.log("Parks Fetch Error:", err)
+        console.log("Parks Fetch Error:", err);
     };
 };
 
@@ -93,30 +132,34 @@ async function filterParks() {
     try {
         let fullList = await getParks();
         fullList.forEach((park) => {
+            // filter to parks within limit range
             if(park.position.lon < place.right(place.lon)
                 && park.position.lon > place.left(place.lon)) {
                 if(park.position.lat > place.btm(place.lat)
                 && park.position.lat < place.top(place.lat)) {
-                    // create an object with the following attributes
+                    // create an object with the following properties
                     var parkContent = new Location(park.id, park.position.lat, park.position.lon, park.poi.name, park.address.freeformAddress);
-                    // create HTML elements
+                    // create a list item for each park
                     let newLI = new DocumentFragment;
                     let newListItem = document.createElement('LI');
-                    newListItem.id = parkContent.id;
+                    // add identifier
+                    newListItem.id = `p${parkContent.id}`;
+                    // populate list item
                     newListItem.innerHTML = `<h1>${parkContent.name}</h1>
                     <p class="address">${parkContent.address}</p>
-                    <a class="mapIt" target="_blank" url="https://www.google.com/maps/search/${parkContent.nameUrl}/@${parkContent.lat},${parkContent.lon}">Get Directions</a>`;
-                    // append HTML elements
+                    <a class="mapIt" target="_blank" href="https://www.google.com/maps/search/${parkContent.nameUrl}/@${parkContent.lat},${parkContent.lon}">Get Directions</a>`;
+                    // append list item to list
                     newLI.appendChild(newListItem);
                     list.appendChild(newLI);
 
                     // create plot point for park
                     const dogPark = L.circle([park.position.lat, park.position.lon], {
-                        color: 'rgba(230, 60, 60, .6)',
-                        radius: 12,
-                        fillColor: 'rgb(230, 60, 60)'
+                        color: 'rgba(230, 60, 60, .6)', // bright & semiopaque cherry red
+                        radius: 5,
+                        fillColor: 'rgb(230, 60, 60)', // bright cherry red
+                        fillOpacity: .7
                     }).addTo(map)
-                    // create pop-up with basic info
+                    // create pop-up with basic info -- for later: include link to html list item?
                     .bindPopup("<h1>" + park.poi.name + "</h1>" +
                         "<p>" + park.address.streetName + "<br>" +
                         park.address.municipality + ", " + park.address.countrySubdivision + " " + park.address.postalCode + "</p>"
@@ -141,6 +184,30 @@ function Location(id, lat, lon, name, address) {
     this.favorite = false;
     this.nameUrl = name.replaceAll(" ", "+");
 };
+
+// FOR ROAD GOAT
+/*var roadOptions = {
+    'method': 'GET',
+    'hostname': 'api.roadgoat.com',
+    'path': '/api/v2/destinations/new-york-ny-usa',
+    'headers': {
+      'Authorization': `Basic NDBlOGJlZDIxY2RjNGJiOWJmNWE2YzNmNmNmNzhjMjE6YTRlZjljNjdhYTU5N2UzZDE2ZjQ2NTljMDJjOTZjNDE=`
+    },
+    'maxRedirects': 20
+};
+
+var roadHeader = new Headers(roadOptions);*/
+
+
+// FOR ROAD GOAT
+/*async function getRoadInfo() {
+    try {
+        const response = await fetch("https://api.roadgoat.com/api/v2/destinations/new-york-ny-usa", { headers: roadHeader});
+        console.log(response);
+    } catch(err) {
+        console.log("Road Fetch Error:", err)
+    };
+};*/
 
 /*
 fetch("https://api.roadgoat.com/api/v2/destinations/");*/

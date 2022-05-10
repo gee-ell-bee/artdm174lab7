@@ -20,17 +20,17 @@
 <body id="main">
     <main>
         <section id="container" class="words">
-            <h1>Dog Parks Near You</h1>
+            <h1>Dog Parks Near <span id="cityName">You</span></h1>
             <section class="search">
-                <form>
+                <form id="form">
                     <label for="search">
                         Enter Your City
                         <input id="search"
                             type="search"
                             name="searchbar"
                             placeholder="San Francisco"></label>
-                    <a id="button" role="button" aria-roledescription="Submit"
-                        >Search</a>
+                    <button id="button" type="submit"
+                        >Search</button>
                 </form>
             </section>
             <section class="parkList">
