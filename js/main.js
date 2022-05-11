@@ -33,10 +33,6 @@ import { caCities } from "./ca-cities-json.js"; // import cities data
     }
  };
 
-// check data matches for Alamo
-//console.log("topLeft=38.066068,-122.457460&btmRight=37.353515,-121.211545");
-//console.log("topLeft=", place.top(place.lat), ",", place.left(place.lon), "&btmRight=", place.btm(place.lat), ",", place.right(place.lon));
-
 // init map
  let map = L.map("map").setView([place.lat, place.lon], 10);
  L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png", {
@@ -65,39 +61,32 @@ import { caCities } from "./ca-cities-json.js"; // import cities data
 document.addEventListener("DOMContentLoaded", init);
 
 function init() {
-    console.log(searchField, searchButton);
-
     // update placeholder & title text to match initial
      updateHTMLElem();
     
     // show parsed parks data points
      filterParks();
 
-    //searchbar events
-        // find place
-         searchButton.addEventListener("click", search);
-        // searchbar filtering while typing function:
-         //searchField.addEventListener("input", searchInput);   
+    // searchbar functionality event listener
+     searchButton.addEventListener("click", search);
 };
 
 function searchInput(e) { // update recommended places list as user types
     // get search input
      let value = e.target.value;
-    // check value
-     console.log(value);
 };
 
 async function search(e) { // final search function; connector of all search asyncs
     try {
         // prevent page reload
         e.preventDefault();
-        await removeParks();
-        // CHANGE WHEN FINISH OTHER FUNCTIONS
-        let results = await searchCities();
-        //check results match place
-        console.log("search f(x)", results, place);
 
+        // await data retrieval
+        await removeParks();
+        await searchCities();
         await filterParks();
+
+        // then refresh content
         refreshWholeApp();
 
     } catch(err) {
@@ -108,9 +97,6 @@ async function search(e) { // final search function; connector of all search asy
     async function removeParks() {
         // remove old park markers
         parksLayer.clearLayers();
-        // check layer group actually cleared
-        console.log("removed", parksLayer.getLayers());
-        console.log("paths on page", document.getElementsByTagName("path"));
 
         // remove old park list items
         list.innerHTML = "";
@@ -139,8 +125,6 @@ async function search(e) { // final search function; connector of all search asy
                     place.lat = Number(cityData.lat);
                     place.lon = Number(cityData.lon);
                     place.id = cityData.id;
-                    // check new place's data
-                    console.log("updated city", place);
                 };
             };
             return place;
@@ -166,7 +150,6 @@ async function refreshWholeApp() {
 
 async function getParks() { // get tomtom parks data
     try {
-        console.log("get parks with", place);
         let response = await fetch(`https://api.tomtom.com/search/2/poiSearch/dog+park.json?key=${Keychain.tom.pass}&limit=100&ofs=0&countryset=US&lat=${place.lat}&lon=${place.lon}&topLeft=${place.top(place.lat)},${place.left(place.lon)}&btmRight=${place.btm(place.lat)},${place.right(place.lon)}&language=en-US&categoryset=9362&relatedpois=all`);
         let baseData = await response.json();
         let data = baseData.results;
@@ -176,12 +159,10 @@ async function getParks() { // get tomtom parks data
     };
 };
 
-
 async function filterParks() {
     try {
-        // get park data from getParks f(x)
+        // retrieve park data from getParks f(x)
         let fullList = await getParks();
-        console.log("got all parks", fullList);
         // iterate through parks
         fullList.forEach((park) => {
             // filter to parks within limit range
@@ -222,8 +203,6 @@ async function filterParks() {
                 };
             };
         });
-        console.log("filtered parks", parksLayer.getLayers());
-        console.log("paths on page", document.getElementsByTagName("path"));
     } catch(err) {
         console.log("Parks Filter Error:", err)
     };
@@ -238,15 +217,11 @@ function updateHTMLElem() {
     function updatePlaceholder() {
         // change placeholder text to currently search place
          searchField.placeholder = place.name;
-        //check placeholder
-         console.log("placeholder", searchField.placeholder);
     };
 
     function updateTitle() {
         // update title span contents
          placeElem.innerHTML = `${place.name}`;
-        // check title
-         //console.log(placeElem.parentElement);
     };
 
 
@@ -263,71 +238,3 @@ function Park(id, lat, lon, name, address) {
      this.address = address;
      this.favorite = false;
 };
-
-// FOR ROAD GOAT
-/*var roadOptions = {
-    'method': 'GET',
-    'hostname': 'api.roadgoat.com',
-    'path': '/api/v2/destinations/new-york-ny-usa',
-    'headers': {
-      'Authorization': `Basic NDBlOGJlZDIxY2RjNGJiOWJmNWE2YzNmNmNmNzhjMjE6YTRlZjljNjdhYTU5N2UzZDE2ZjQ2NTljMDJjOTZjNDE=`
-    },
-    'maxRedirects': 20
-};
-
-var roadHeader = new Headers(roadOptions);*/
-
-
-// FOR ROAD GOAT
-/*async function getRoadInfo() {
-    try {
-        let response = await fetch("https://api.roadgoat.com/api/v2/destinations/new-york-ny-usa", { headers: roadHeader});
-        console.log(response);
-    } catch(err) {
-        console.log("Road Fetch Error:", err)
-    };
-};*/
-
-/*
-fetch("https://api.roadgoat.com/api/v2/destinations/");*/
-
-//fetch("dogpark.json")
-/*fetch(`https://api.tomtom.com/search/2/poiSearch/dog+park.json?key=${Keychain.tom.pass}&limit=100&ofs=0&countryset=US&lat=${place.lat}&lon=${place.lon}&topLeft=${place.top(place.lat)},${place.left(place.lon)}&btmRight=${place.btm(place.lat)},${place.right(place.lon)}&language=en-US&categoryset=9362&relatedpois=all`)
-    .then((response) => response.json())
-    .then((baseData) => {
-        let data = baseData.results;
-        data.forEach((park) => {
-            if(park.position.lon < place.right(place.lon)
-                && park.position.lon > place.left(place.lon)) {
-                if(park.position.lat > place.btm(place.lat)
-                && park.position.lat < place.top(place.lat)) {
-                    // create an object with the following attributes
-                    var parkContent = new Park(park.id, park.position.lat, park.position.lon, park.poi.name, park.address.freeformAddress);
-                    // create HTML elements
-                    let newLI = new DocumentFragment;
-                    let newListItem = document.createElement('LI');
-                    newListItem.id = parkContent.id;
-                    newListItem.innerHTML = `<h1>${parkContent.name}</h1>
-                    <p class="address">${parkContent.address}</p>
-                    <a class="mapIt" target="_blank" url="https://www.google.com/maps/search/${parkContent.nameUrl}/@${parkContent.lat},${parkContent.lon}">Get Directions</a>`;
-                    // append HTML elements
-                    newLI.appendChild(newListItem);
-                    list.appendChild(newLI);
-
-                    // create plot point for park
-                    var parkMarker = L.circle([park.position.lat, park.position.lon], {
-                        color: 'rgba(230, 60, 60, .6)',
-                        radius: 12,
-                        fillColor: 'rgb(230, 60, 60)'
-                    }).addTo(map)
-                    // create pop-up with basic info
-                    .bindPopup("<h1>" + park.poi.name + "</h1>" +
-                        "<p>" + park.address.streetName + "<br>" +
-                        park.address.municipality + ", " + park.address.countrySubdivision + " " + park.address.postalCode + "</p>"
-                    );
-                };
-            };
-        });
-    })
-    .catch(err => console.log("LOCATION error:", err));
-*/
