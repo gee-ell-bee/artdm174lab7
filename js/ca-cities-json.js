@@ -13481,17 +13481,16 @@ export let caCities = [];
 
 for(let i = 0; i < caCitiesJSON.length; i++) {
     const oldCity = caCitiesJSON[i];
-    caCitiesJSON[i].name = caCitiesJSON[i].name.replaceAll(" ", "+");
-    const city = new City(oldCity.id, oldCity.latitude, oldCity.longitude, oldCity.name);
+    const city = new City(oldCity.name, oldCity.latitude, oldCity.longitude, oldCity.id);
     caCities.push({city});
 };
 
-function City(id, lat, lon, name) {
-    // computational IDs
-    this.id = "ca" + id;
-    this.lat = lat;
-    this.lon = lon;
-
+function City(name, lat, lon, id) {
     // client-side info
     this.name = name;
+
+    // computational IDs
+    this.lat = lat;
+    this.lon = lon;
+    this.id = "ca" + id;
 };
