@@ -55,6 +55,10 @@ main {
     grid-gap: 3rem;
 }
 
+.search #errors {
+    color: #f00;
+}
+
 .words {
     width: 100%;
     height: 100%;
