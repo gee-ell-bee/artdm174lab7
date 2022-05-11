@@ -45,6 +45,11 @@ import { caCities } from "./ca-cities-json.js"; // import cities data
     maxZoom: 20})
     .addTo(map);
 
+ // create content limits pane
+ map.createPane("limits");
+ var mapLimits = map.getPane("limits");
+ mapLimits.style.zIndex = 3;
+ mapLimits.style.pointerEvents = "none";
     
 // create layer group for all parks in place range
  let parksLayer = L.layerGroup([]).addTo(map);
@@ -154,7 +159,6 @@ async function refreshMap() {
      map.setView([place.lat, place.lon]);
     // update You Are Here Marker
      youreHereMarker.setLatLng([place.lat, place.lon]);
-     youreHereMarker.update();
 };
 
 async function refreshWholeApp() {
