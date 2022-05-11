@@ -72,7 +72,7 @@ main {
 
 .words .parkList {
     overflow-y: scroll;
-    max-height: 40vh;
+    max-height: 60vh;
 }
 
 #map {
@@ -88,21 +88,11 @@ li{
     margin: 1rem;
     padding: 1rem;
     border-radius: 25px;
-    
-}
-
-ul{
-    display:grid;
-  grid-template-columns: 49% 49%;
-  grid-row: auto auto;
-  grid-column-gap: 20px;
-  grid-row-gap: 20px;
 }
 
 header{
     background-color: #56CCF2;
-    margin: top;
-    display: flex;
-    justify-content: center;
-    padding: 1rem;
+    padding: 0;
+    margin: 0;
+    padding: 0;
 }
