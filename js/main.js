@@ -34,6 +34,10 @@ import { caCities } from "./ca-cities-json.js"; // import cities data
     }
  };
 
+// check data matches for Alamo
+//console.log("topLeft=38.066068,-122.457460&btmRight=37.353515,-121.211545");
+//console.log("topLeft=", place.top(place.lat), ",", place.left(place.lon), "&btmRight=", place.btm(place.lat), ",", place.right(place.lon));
+
 // init map
  let map = L.map("map").setView([place.lat, place.lon], 10);
  L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png", {
@@ -62,32 +66,39 @@ import { caCities } from "./ca-cities-json.js"; // import cities data
 document.addEventListener("DOMContentLoaded", init);
 
 function init() {
+    console.log(searchField, searchButton);
+
     // update placeholder & title text to match initial
      updateHTMLElem();
     
     // show parsed parks data points
      filterParks();
 
-    // searchbar functionality event listener
-     searchButton.addEventListener("click", search);
+    //searchbar events
+        // find place
+         searchButton.addEventListener("click", search);
+        // searchbar filtering while typing function:
+         //searchField.addEventListener("input", searchInput);   
 };
 
 function searchInput(e) { // update recommended places list as user types
     // get search input
      let value = e.target.value;
+    // check value
+     console.log(value);
 };
 
 async function search(e) { // final search function; connector of all search asyncs
     try {
         // prevent page reload
         e.preventDefault();
-
-        // await data retrieval
         await removeParks();
-        await searchCities();
-        await filterParks();
+        // CHANGE WHEN FINISH OTHER FUNCTIONS
+        let results = await searchCities();
+        //check results match place
+        console.log("search f(x)", results, place);
 
-        // then refresh content
+        await filterParks();
         refreshWholeApp();
 
     } catch(err) {
@@ -98,6 +109,9 @@ async function search(e) { // final search function; connector of all search asy
     async function removeParks() {
         // remove old park markers
         parksLayer.clearLayers();
+        // check layer group actually cleared
+        console.log("removed", parksLayer.getLayers());
+        console.log("paths on page", document.getElementsByTagName("path"));
 
         // remove old park list items
         list.innerHTML = "";
@@ -126,6 +140,8 @@ async function search(e) { // final search function; connector of all search asy
                     place.lat = Number(cityData.lat);
                     place.lon = Number(cityData.lon);
                     place.id = cityData.id;
+                    // check new place's data
+                    console.log("updated city", place);
                 };
             };
             return place;
@@ -151,6 +167,7 @@ async function refreshWholeApp() {
 
 async function getParks() { // get tomtom parks data
     try {
+        console.log("get parks with", place);
         let response = await fetch(`https://api.tomtom.com/search/2/poiSearch/dog+park.json?key=${Keychain.tom.pass}&limit=100&ofs=0&countryset=US&lat=${place.lat}&lon=${place.lon}&topLeft=${place.top(place.lat)},${place.left(place.lon)}&btmRight=${place.btm(place.lat)},${place.right(place.lon)}&language=en-US&categoryset=9362&relatedpois=all`);
         let baseData = await response.json();
         let data = baseData.results;
@@ -160,10 +177,12 @@ async function getParks() { // get tomtom parks data
     };
 };
 
+
 async function filterParks() {
     try {
-        // retrieve park data from getParks f(x)
+        // get park data from getParks f(x)
         let fullList = await getParks();
+        console.log("got all parks", fullList);
         // iterate through parks
         fullList.forEach((park) => {
             // filter to parks within limit range
@@ -202,6 +221,8 @@ async function filterParks() {
                 };
             };
         });
+        console.log("filtered parks", parksLayer.getLayers());
+        console.log("paths on page", document.getElementsByTagName("path"));
     } catch(err) {
         console.log("Parks Filter Error:", err)
     };
@@ -216,11 +237,15 @@ function updateHTMLElem() {
     function updatePlaceholder() {
         // change placeholder text to currently search place
          searchField.placeholder = place.name;
+        //check placeholder
+         console.log("placeholder", searchField.placeholder);
     };
 
     function updateTitle() {
         // update title span contents
          placeElem.innerHTML = `${place.name}`;
+        // check title
+         //console.log(placeElem.parentElement);
     };
 
 
