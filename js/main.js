@@ -4,6 +4,7 @@ import { caCities } from "./ca-cities-json.js"; // import cities data
 // create global vars for HTML Form
  const searchButton = document.getElementById("button");
  const searchField = document.getElementById("search");
+ const url = "";
 
 // create global vars
  let list = document.getElementById("parkList");
@@ -195,10 +196,8 @@ async function filterParks() {
                                 fillOpacity: .7,
                          }).addTo(parksLayer)
                          // create pop-up with basic info -- for later: include link to html list item?
-                          .bindPopup("<h1>" + park.poi.name + "</h1>" +
-                                "<p>" + park.address.streetName + "<br>" +
-                                park.address.municipality + ", " + park.address.countrySubdivision + " " + park.address.postalCode + "</p>"
-                          )
+                          .bindPopup(`<h1>${park.poi.name}</h1>
+                            <p><a href="${url}/#p${parkContent.id}">Details</a></p>`)
                          ;
                 };
             };
@@ -228,7 +227,7 @@ function updateHTMLElem() {
 // park constructor
 function Park(id, lat, lon, name, address) {
     // info for server use
-     this.id = "l" + id;
+     this.id = id; // for matching to map marker
      this.lat = lat;
      this.lon = lon;
      this.nameUrl = name.replaceAll(" ", "+");
@@ -236,5 +235,5 @@ function Park(id, lat, lon, name, address) {
     // client-side info
      this.name = name;
      this.address = address;
-     this.favorite = false;
+     this.favorite = false; // for caching
 };
